@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Report Pengaduan</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+  
+ 📢 E-REPORT PENGADUAN WARGA                              
+ Laporkan kerusakan fasilitas dengan mudah                
+                                                          
+🟢 Status : Aktif 24 Jam                                 
+👥 Total Pengguna : 254                                 
+📅 Hari ini : 18 November 2026      
+                    
+
+      <!-- NAVBAR ATAS -->
+  <header class="navbar">
+    <div class="navbar-brand">
+      <div class="logo-box">ER</div>
+      <div>
+        <h1>E-Report Warga &amp; Sarpras</h1>
+        <p>Sistem Layanan Pengaduan Kerusakan &amp; Keluhan</p>
+      </div>
+    </div>
+    <div class="nav-links">
+      <button type="button" class="nav-btn active" id="btnNavHome">Beranda &amp; Lapor</button>
+      <button type="button" class="nav-btn" id="btnNavGuide">Alur &amp; Tentang Project</button>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- HALAMAN 1: BERANDA, FORM LAPORAN & DAFTAR PENGADUAN -->
+    <section class="section-page active" id="pageHome">
+
+      <!-- Banner Informasi -->
+      <div class="hero-banner">
+        <div>
+          <h2 id="greetingTitle">Selamat Datang di Portal E-Report Pengaduan!</h2>
+          <p id="subBannerText">Laporkan kerusakan fasilitas, kebersihan lingkungan, atau kendala teknis dengan mudah dan cepat.</p>
+        </div>
+        <div style="text-align: right;">
+          <div style="font-size: 12px; color: var(--primary); font-weight: bold;" id="statusLayananText">
+            Status Layanan: Aktif 24 Jam
+          </div>
+          <div style="font-size: 11px; color: var(--text-gray);" id="sessionVisitText">
+            Sesi Kunjungan: 1x
+          </div>
+        </div>
+      </div>
+
+      <!-- Kartu Statistik (Termasuk Persentase Penyelesaian dari Operator Aritmatika) -->
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="label">Total Laporan Masuk</div>
+          <div class="number" id="totalCount">4</div>
+        </div>
+        <div class="stat-card wait">
+          <div class="label">Menunggu Tindakan</div>
+          <div class="number" id="waitCount">1</div>
+        </div>
+        <div class="stat-card proc">
+          <div class="label">Sedang Diproses</div>
+          <div class="number" id="procCount">2</div>
+        </div>
+        <div class="stat-card done">
+          <div class="label">Selesai (<span id="percentDone">25%</span>)</div>
+          <div class="number" id="doneCount">1</div>
+        </div>
+      </div>
+
+      <!-- Grid Utama: Kiri Form Input, Kanan Tabel Daftar Laporan -->
+      <div class="main-grid">
+
+        <!-- Kolom Kiri: Form Buat Laporan -->
+        <div class="card">
+          <div class="card-title">Buat Laporan Baru</div>
+          <p class="card-subtitle">Isi data di bawah ini (minimal judul 5 huruf &amp; detail 10 huruf).</p>
+
+          <!-- Elemen Notifikasi yang dimanipulasi via DOM .style & .textContent -->
+          <div class="notif-banner" id="notifBox">Laporan berhasil dikirim!</div>
+
+          <form id="reportForm" novalidate>
+            <div class="form-group">
+              <label for="pelapor">Nama Pelapor</label>
+              <input type="text" id="pelapor" placeholder="Contoh: Dimas Prakoso (X TKJ 1)">
+            </div>
+
+            <div class="form-group">
+              <label for="kategori">Kategori Laporan</label>
+              <select id="kategori">
+                <!-- Opsi diisi / dapat ditambah dengan perulangan JS -->
+                <option value="Fasilitas & Lingkungan">Fasilitas &amp; Lingkungan</option>
+                <option value="Kebersihan & Taman">Kebersihan &amp; Taman</option>
+                <option value="Keamanan & Ketertiban">Keamanan &amp; Ketertiban</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="lokasi">Lokasi Kejadian / Ruangan</label>
+              <input type="text" id="lokasi" placeholder="Contoh: Lab Komputer 2 / Bengkel">
+            </div>
+
+            <div class="form-group">
+              <label for="judul">Judul / Keluhan Singkat</label>
+              <input type="text" id="judul" placeholder="Contoh: AC Tidak Dingin / Kursi Rusak">
+            </div>
+
+            <div class="form-group">
+              <label for="deskripsi">Detail Keterangan</label>
+              <textarea id="deskripsi" rows="3" placeholder="Jelaskan kondisi kerusakan minimal 10 karakter..."></textarea>
+            </div>
+
+            <button type="submit" class="btn-submit">+ Kirim Laporan Sekarang</button>
+          </form>
+        </div>
+
+        <!-- Kolom Kanan: Tabel Daftar Laporan -->
+        <div class="card">
+          <div class="card-title">Daftar Laporan Masuk</div>
+          <p class="card-subtitle">Data otomatis tersimpan di browser menggunakan <strong>localStorage &amp; JSON</strong>.</p>
+
+          <!-- Bar Pencarian & Filter -->
+          <div class="filter-bar">
+            <input type="text" id="searchBox" class="search-input" placeholder="Cari judul, pelapor, atau lokasi...">
+            <select id="statusFilter" class="filter-select">
+              <option value="SEMUA">Semua Status</option>
+              <option value="Menunggu">Menunggu</option>
+              <option value="Diproses">Diproses</option>
+              <option value="Selesai">Selesai</option>
+            </select>
+          </div>
+
+          <!-- Tombol Demonstrasi Method Array pop() & localStorage Reset (Menggunakan event onclick) -->
+          <div class="toolbar-extra">
+            <button type="button" class="action-btn" onclick="hapusLaporanTerakhirPop()">
+              Hapus Laporan Terakhir (Method .pop)
+            </button>
+            <button type="button" class="action-btn delete" onclick="resetDataAwalStorage()">
+              Reset Data Awal (localStorage)
+            </button>
+            <span id="infoRingkasMap" style="font-size: 11px; color: var(--text-gray); align-self: center; margin-left: auto;"></span>
+          </div>
+
+          <!-- Tabel HTML Biasa -->
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width: 85px;">ID</th>
+                  <th>Detail Keluhan &amp; Lokasi</th>
+                  <th>Pelapor</th>
+                  <th>Status</th>
+                  <th style="width: 145px;">Aksi Petugas</th>
+                </tr>
+              </thead>
+              <tbody id="reportTableBody">
+                <!-- Data diisi otomatis lewat script JS di bawah -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- HALAMAN 2: ALUR PENGADUAN & PENERAPAN 15 MATERI JAVASCRIPT KELAS 10 SMK -->
+    <section class="section-page" id="pageGuide">
+      <div class="card">
+        <div class="card-title">Alur Kerja Sistem E-Report &amp; Dokumentasi Materi JavaScript</div>
+        <p class="card-subtitle">Seluruh 15 materi JavaScript Kelas 10 SMK telah diterapkan langsung di dalam kode program website ini:</p>
+
+        <div class="guide-grid">
+          <div class="step-box">
+            <span class="step-num">1</span>
+            <h4>Tulis &amp; Validasi Form</h4>
+            <p>Siswa mengisi form. JS mengecek input dengan <strong>Operator Logika &amp; Percabangan If-Else</strong> sebelum dimasukkan ke Array dengan <code>.push()</code>.</p>
+          </div>
+          <div class="step-box">
+            <span class="step-num">2</span>
+            <h4>Simpan ke Web Storage</h4>
+            <p>Data Array of Objects diubah menjadi teks JSON dengan <code>JSON.stringify()</code> lalu disimpan ke <code>localStorage</code> agar tidak hilang saat di-refresh.</p>
+          </div>
+          <div class="step-box">
+            <span class="step-num">3</span>
+            <h4>Manipulasi DOM &amp; Tabel</h4>
+            <p>Data disaring dengan <code>.filter()</code> dan diubah menjadi baris HTML tabel menggunakan <code>.map()</code> serta ditampilkan via <code>innerHTML</code>.</p>
+          </div>
+        </div>
+
+        <h3 style="font-size: 15px; margin-top: 24px; color: var(--text-dark);">Daftar 15 Materi JavaScript yang Diterapkan di Kode:</h3>
+        <div class="materi-grid" id="listMateriContainer">
+          <!-- Diisi menggunakan Perulangan FOR di JavaScript -->
+        </div>
+      </div>
+    </section>
+
+    <script src="assets/js/script.js"></script>
+</body>
+</html>
